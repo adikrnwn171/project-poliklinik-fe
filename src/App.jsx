@@ -1,14 +1,20 @@
 import "./App.css";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Test from "./pages/test";
-import Halo from "./pages/halo";
+import Home from "./pages/home";
+import Poli from "./pages/poli";
+import Login from "./pages/login";
+import Register from "./pages/register";
 
 function App() {
   return (
     <>
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Halo />} />
+          <Route path="/" element={<Home />} />
+          <Route path="/poli" element={<Poli />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
           <Route path="/test" element={<Test />} />
         </Routes>
       </BrowserRouter>
