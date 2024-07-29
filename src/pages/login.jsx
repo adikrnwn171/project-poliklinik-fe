@@ -1,4 +1,51 @@
+import axios from "axios";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+
 function Login() {
+  const [email, setEmail] = useState();
+  const [password, setPassword] = useState();
+  const [error, setError] = useState();
+  const [showError, setShowError] = useState();
+  const navigateTo = useNavigate();
+
+  useEffect(() => {
+    let timer;
+    if (error) {
+      setShowError(true);
+      timer = setTimeout(() => {
+        setError("");
+        setShowError(false);
+      }, 3000);
+    }
+    return () => clearTimeout(timer);
+  }, [error]);
+
+  const handleEmailChange = (event) => {
+    setEmail(event.target.value);
+  };
+
+  const handlePasswordChange = (event) => {
+    setPassword(event.target.value);
+  };
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+
+    try {
+      const response = await axios.post(
+        "http://localhost:8000/api/pasien/login",
+        {
+          email,
+          password,
+        }
+      );
+      localStorage.setItem("token", response.data.data.token);
+      navigateTo("/");
+    } catch (error) {
+      setError("Invalid email or password");
+    }
+  };
   return (
     <>
       <body class="hold-transition login-page">
@@ -12,12 +59,15 @@ function Login() {
             </div>
             <div className="card-body">
               <p className="login-box-msg">Sign in to start your session</p>
-              <form action="../../index3.html" method="post">
+              <form onSubmit={handleSubmit}>
                 <div className="input-group mb-3">
                   <input
                     type="email"
                     className="form-control"
                     placeholder="Email"
+                    value={email}
+                    onChange={handleEmailChange}
+                    required
                   />
                   <div className="input-group-append">
                     <div className="input-group-text">
@@ -30,6 +80,9 @@ function Login() {
                     type="password"
                     className="form-control"
                     placeholder="Password"
+                    value={password}
+                    onChange={handlePasswordChange}
+                    required
                   />
                   <div className="input-group-append">
                     <div className="input-group-text">
@@ -52,6 +105,7 @@ function Login() {
                   </div>
                   {/* /.col */}
                 </div>
+                {error && <alert>{error}</alert>}
               </form>
               {/* /.social-auth-links */}
               <p className="mb-1">
