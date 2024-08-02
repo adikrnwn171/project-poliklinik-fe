@@ -48,7 +48,7 @@ function Login() {
   };
   return (
     <>
-      <body class="hold-transition login-page">
+      <body className="hold-transition login-page">
         <div className="login-box">
           {/* /.login-logo */}
           <div className="card card-outline card-primary">

@@ -1,4 +1,11 @@
+import { useNavigate } from "react-router-dom";
+
 function Navbar() {
+  const navigateTo = useNavigate();
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    navigateTo("/login");
+  };
   return (
     <>
       {/* Navbar */}
@@ -63,6 +70,28 @@ function Navbar() {
               </form>
             </div>
           </li>
+
+          <li className="nav-item dropdown">
+            <a
+              id="dropdownSubMenu1"
+              href="#"
+              data-toggle="dropdown"
+              aria-haspopup="true"
+              aria-expanded="false"
+              className="nav-link dropdown-toggle"
+            ></a>
+            <ul
+              aria-labelledby="dropdownSubMenu1"
+              className="dropdown-menu border-0 shadow"
+            >
+              <li>
+                <a href="#" className="dropdown-item" onClick={handleLogout}>
+                  Logout
+                </a>
+              </li>
+            </ul>
+          </li>
+
           {/* Messages Dropdown Menu */}
           <li className="nav-item dropdown">
             <a className="nav-link" data-toggle="dropdown" href="#">
@@ -177,27 +206,6 @@ function Navbar() {
                 See All Notifications
               </a>
             </div>
-          </li>
-          <li className="nav-item">
-            <a
-              className="nav-link"
-              data-widget="fullscreen"
-              href="#"
-              role="button"
-            >
-              <i className="fas fa-expand-arrows-alt" />
-            </a>
-          </li>
-          <li className="nav-item">
-            <a
-              className="nav-link"
-              data-widget="control-sidebar"
-              data-controlsidebar-slide="true"
-              href="#"
-              role="button"
-            >
-              <i className="fas fa-th-large" />
-            </a>
           </li>
         </ul>
       </nav>

@@ -1,7 +1,30 @@
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import Sidebar from "../components/Sidebar";
 
 function Poli() {
+  const navigateTo = useNavigate();
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    console.log("periksa token", isLoggedIn);
+    // Cek apakah pengguna sudah login atau memiliki token di lokal
+    const token = localStorage.getItem("token");
+    if (token) {
+      setIsLoggedIn(true); // Jika ada token, pengguna dianggap sudah login
+    }
+  }, []);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (!isLoggedIn) {
+        navigateTo("/login");
+      }
+    }, 10); // Menunggu selama 10 milidetik sebelum dieksekusi
+
+    return () => clearTimeout(timer); // Membersihkan timeout jika komponen unmount
+  }, [isLoggedIn]);
   return (
     <>
       <body className="hold-transition sidebar-mini layout-fixed">

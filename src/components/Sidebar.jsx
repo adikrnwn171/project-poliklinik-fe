@@ -1,4 +1,28 @@
+import { useEffect, useState } from "react";
+import axios from "axios";
+
 function Sidebar() {
+  const [userData, setUserData] = useState();
+
+  useEffect(() => {
+    const userData = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        const headers = { Authorization: `Bearer ${token}` };
+        const response = await axios.get(
+          "http://localhost:8000/api/pasien/detail",
+          { headers }
+        );
+        setUserData(response.data.data);
+        console.log(response.data.data);
+        console.log(response.data.data.name);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    userData();
+  }, []);
+
   return (
     <>
       {/* Main Sidebar Container */}
@@ -26,7 +50,7 @@ function Sidebar() {
             </div>
             <div className="info">
               <a href="#" className="d-block">
-                Alexander Pierce
+                {userData.name}
               </a>
             </div>
           </div>
