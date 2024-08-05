@@ -2,10 +2,11 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 
 function Sidebar() {
-  const [userData, setUserData] = useState();
+  const [userData, setUserData] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const userData = async () => {
+    const user = async () => {
       try {
         const token = localStorage.getItem("token");
         const headers = { Authorization: `Bearer ${token}` };
@@ -14,21 +15,25 @@ function Sidebar() {
           { headers }
         );
         setUserData(response.data.data);
-        console.log(response.data.data);
-        console.log(response.data.data.name);
+        setIsLoading(false);
       } catch (error) {
         console.log(error);
+        setIsLoading(false);
       }
     };
-    userData();
+    user();
   }, []);
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <>
       {/* Main Sidebar Container */}
       <aside className="main-sidebar sidebar-dark-primary elevation-4">
         {/* Brand Logo */}
-        <a href="index3.html" className="brand-link">
+        <a href="#" className="brand-link">
           <img
             src="dist/img/AdminLTELogo.png"
             alt="AdminLTE Logo"

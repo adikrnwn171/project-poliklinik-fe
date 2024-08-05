@@ -2,17 +2,20 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import Sidebar from "../components/Sidebar";
+import axios from "axios";
 
 function Poli() {
   const navigateTo = useNavigate();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [userData, setUserData] = useState();
 
   useEffect(() => {
-    console.log("periksa token", isLoggedIn);
     // Cek apakah pengguna sudah login atau memiliki token di lokal
     const token = localStorage.getItem("token");
     if (token) {
       setIsLoggedIn(true); // Jika ada token, pengguna dianggap sudah login
+      setIsLoading(false);
     }
   }, []);
 
@@ -25,8 +28,39 @@ function Poli() {
 
     return () => clearTimeout(timer); // Membersihkan timeout jika komponen unmount
   }, [isLoggedIn]);
+
+  useEffect(() => {
+    const user = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        const headers = { Authorization: `Bearer ${token}` };
+        const response = await axios.get(
+          "http://localhost:8000/api/pasien/detail",
+          { headers }
+        );
+        setUserData(response.data.data);
+        console.log(response.data.data.rm);
+        setIsLoading(false);
+      } catch (error) {
+        console.log(error);
+        setIsLoading(false);
+      }
+    };
+    user();
+  }, []);
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  const style = `
+  .wrapper {
+    min-height: 100vh;
+  }`;
+
   return (
     <>
+      <style>{style}</style>
       <body className="hold-transition sidebar-mini layout-fixed">
         <div className="wrapper">
           <Navbar />
@@ -67,7 +101,12 @@ function Poli() {
                   <form className="ml-2 mr-2 mt-4">
                     <label>Nomor Rekam Medis</label>
                     <div className="input-group mb-2">
-                      <input type="text" className="form-control" readOnly />
+                      <input
+                        type="text"
+                        className="form-control"
+                        value={userData.rm}
+                        readOnly
+                      />
                     </div>
                     <label>Pilih Poli</label>
                     <br />

@@ -6,12 +6,14 @@ import Sidebar from "../components/Sidebar";
 function Home() {
   const navigateTo = useNavigate();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     // Cek apakah pengguna sudah login atau memiliki token di lokal
     const token = localStorage.getItem("token");
     if (token) {
       setIsLoggedIn(true); // Jika ada token, pengguna dianggap sudah login
+      setIsLoading(false);
     }
   }, []);
 
@@ -24,6 +26,10 @@ function Home() {
 
     return () => clearTimeout(timer); // Membersihkan timeout jika komponen unmount
   }, [isLoggedIn]);
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <>
