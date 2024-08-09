@@ -8,7 +8,10 @@ function Poli() {
   const navigateTo = useNavigate();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-  const [userData, setUserData] = useState();
+  const [userData, setUserData] = useState({});
+  const [jadwalData, setJadwalData] = useState([]);
+  const [selectedPoli, setSelectedPoli] = useState("");
+  const [filteredJadwal, setFilteredJadwal] = useState([]);
 
   useEffect(() => {
     // Cek apakah pengguna sudah login atau memiliki token di lokal
@@ -24,13 +27,13 @@ function Poli() {
       if (!isLoggedIn) {
         navigateTo("/login");
       }
-    }, 10); // Menunggu selama 10 milidetik sebelum dieksekusi
+    }, 100); // Menunggu selama 10 milidetik sebelum dieksekusi
 
     return () => clearTimeout(timer); // Membersihkan timeout jika komponen unmount
   }, [isLoggedIn]);
 
   useEffect(() => {
-    const user = async () => {
+    const fetchUser = async () => {
       try {
         const token = localStorage.getItem("token");
         const headers = { Authorization: `Bearer ${token}` };
@@ -39,15 +42,36 @@ function Poli() {
           { headers }
         );
         setUserData(response.data.data);
-        console.log(response.data.data.rm);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    const fetchJadwal = async () => {
+      try {
+        const payload = await axios.get("http://localhost:8000/api/jadwal");
+        setJadwalData(payload.data.message);
         setIsLoading(false);
       } catch (error) {
         console.log(error);
         setIsLoading(false);
       }
     };
-    user();
+
+    fetchUser();
+    fetchJadwal();
   }, []);
+
+  useEffect(() => {
+    if (selectedPoli) {
+      const filtered = jadwalData.filter(
+        (jadwal) => jadwal.Dokter.Poli.namaPoli === selectedPoli
+      );
+      setFilteredJadwal(filtered);
+    } else {
+      setFilteredJadwal([]);
+    }
+  }, [selectedPoli, jadwalData]);
 
   if (isLoading) {
     return <div>Loading...</div>;
@@ -110,19 +134,37 @@ function Poli() {
                     </div>
                     <label>Pilih Poli</label>
                     <br />
-                    <select className="input-group mb-2 mr-2">
-                      <option selected>UMUM</option>
-                      <option value="">THT</option>
-                      <option value="">MATA</option>
-                      <option value="">BEDAH</option>
+                    <select
+                      className="input-group mb-2 mr-2"
+                      value={selectedPoli}
+                      onChange={(e) => setSelectedPoli(e.target.value)}
+                    >
+                      <option value="" disabled selected>
+                        PILIH POLI
+                      </option>
+                      <option value="Umum">UMUM</option>
+                      <option value="THT">THT</option>
+                      <option value="Mata">MATA</option>
+                      <option value="Bedah">BEDAH</option>
+                      <option value="Gigi">GIGI</option>
+                      <option value="Jantung">JANTUNG</option>
+                      <option value="Paru">PARU</option>
+                      <option value="Penyakit Dalam">PENYAKIT DALAM</option>
+                      <option value="Orthopaedi">ORTHOPAEDI</option>
                     </select>
                     <label>Pilih Jadwal</label>
                     <br />
                     <select className="input-group mb-2 mr-2">
-                      <option selected>1</option>
-                      <option value="">2</option>
-                      <option value="">3</option>
-                      <option value="">4</option>
+                      <option value="" disabled selected>
+                        PILIH JADWAL
+                      </option>
+                      {filteredJadwal.map((index) => (
+                        <option key={index} value={index.id}>
+                          {index.hari} | {index.jamMulai.slice(0, 5)}-
+                          {index.jamSelesai.slice(0, 5)} |
+                          {index.Dokter.dokterName}
+                        </option>
+                      ))}
                     </select>
                     <label>Keluhan</label>
                     <div className="input-group mb-2">
