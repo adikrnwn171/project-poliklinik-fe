@@ -12,6 +12,9 @@ function Poli() {
   const [jadwalData, setJadwalData] = useState([]);
   const [selectedPoli, setSelectedPoli] = useState("");
   const [filteredJadwal, setFilteredJadwal] = useState([]);
+  const [selectedJadwal, setSelectedJadwal] = useState();
+  const [keluhan, setKeluhan] = useState("");
+  const [riwayatDaftar, setRiwayatDaftar] = useState([]);
 
   useEffect(() => {
     // Cek apakah pengguna sudah login atau memiliki token di lokal
@@ -73,6 +76,45 @@ function Poli() {
     }
   }, [selectedPoli, jadwalData]);
 
+  const handleSelectJadwal = (e) => {
+    setSelectedJadwal(e.target.value);
+  };
+
+  const handleKeluhan = (e) => {
+    setKeluhan(e.target.value);
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      const token = localStorage.getItem("token");
+      const headers = { Authorization: `Bearer ${token}` };
+
+      const response = await axios.post(
+        "http://localhost:8000/api/daftar",
+        { idJadwal: selectedJadwal, keluhan },
+        { headers }
+      );
+      console.log(response);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    const riwayat = async () => {
+      try {
+        const response = await axios.get("http://localhost:8000/api/daftar");
+        setRiwayatDaftar(response.data.message);
+        console.log(response.data.message);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    riwayat();
+  }, []);
+
   if (isLoading) {
     return <div>Loading...</div>;
   }
@@ -122,7 +164,7 @@ function Poli() {
                   <div className="bg-dark border rounded-top p-2">
                     <h3 className="ml-2">Daftar Poli</h3>
                   </div>
-                  <form className="ml-2 mr-2 mt-4">
+                  <form className="ml-2 mr-2 mt-4" onSubmit={handleSubmit}>
                     <label>Nomor Rekam Medis</label>
                     <div className="input-group mb-2">
                       <input
@@ -154,7 +196,11 @@ function Poli() {
                     </select>
                     <label>Pilih Jadwal</label>
                     <br />
-                    <select className="input-group mb-2 mr-2">
+                    <select
+                      className="input-group mb-2 mr-2"
+                      value={selectedJadwal}
+                      onChange={handleSelectJadwal}
+                    >
                       <option value="" disabled selected>
                         PILIH JADWAL
                       </option>
@@ -168,7 +214,12 @@ function Poli() {
                     </select>
                     <label>Keluhan</label>
                     <div className="input-group mb-2">
-                      <textarea type="textarea" className="form-control" />
+                      <textarea
+                        type="textarea"
+                        className="form-control"
+                        onChange={handleKeluhan}
+                        value={keluhan}
+                      />
                     </div>
                     <button type="submit" className="btn btn-primary mb-5">
                       Submit
@@ -192,38 +243,22 @@ function Poli() {
                         <th scope="col">Aksi</th>
                       </tr>
                     </thead>
-                    <tbody>
-                      <tr>
-                        <th scope="row">1</th>
-                        <td>Mark</td>
-                        <td>Otto</td>
-                        <td>@mdo</td>
-                        <td>07.00</td>
-                        <td>08.00</td>
-                        <td>1</td>
-                        <td>tes</td>
-                      </tr>
-                      <tr>
-                        <th scope="row">2</th>
-                        <td>Jacob</td>
-                        <td>Thornton</td>
-                        <td>@fat</td>
-                        <td>07.00</td>
-                        <td>08.00</td>
-                        <td>2</td>
-                        <td>tes</td>
-                      </tr>
-                      <tr>
-                        <th scope="row">3</th>
-                        <td>Larry</td>
-                        <td>the Bird</td>
-                        <td>@twitter</td>
-                        <td>07.00</td>
-                        <td>08.00</td>
-                        <td>3</td>
-                        <td>tes</td>
-                      </tr>
-                    </tbody>
+                    {riwayatDaftar && (
+                      <tbody>
+                        <tr>
+                          <th scope="row">1</th>
+                          <td>Mark</td>
+                          <td>
+                            {/* {riwayatDaftar.JadwalPeriksa.Dokter.dokterName} */}
+                          </td>
+                          <td>@mdo</td>
+                          <td>07.00</td>
+                          <td>08.00</td>
+                          <td>1</td>
+                          <td>tes</td>
+                        </tr>
+                      </tbody>
+                    )}
                   </table>
                 </div>
               </div>
