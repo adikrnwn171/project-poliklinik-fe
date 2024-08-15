@@ -4,6 +4,7 @@ import Home from "./pages/home";
 import Poli from "./pages/poli";
 import Login from "./pages/login";
 import Register from "./pages/register";
+import Otp from "./pages/otp";
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
           <Route path="/poli" element={<Poli />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/otp" element={<Otp />} />
         </Routes>
       </BrowserRouter>
     </>

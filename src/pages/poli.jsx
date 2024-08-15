@@ -74,7 +74,12 @@ function Poli() {
     } else {
       setFilteredJadwal([]);
     }
-  }, [selectedPoli, jadwalData]);
+  }, [selectedPoli]);
+
+  const changePoli = (e) => {
+    setSelectedPoli(e.target.value);
+    setSelectedJadwal("");
+  };
 
   const handleSelectJadwal = (e) => {
     setSelectedJadwal(e.target.value);
@@ -96,7 +101,10 @@ function Poli() {
         { idJadwal: selectedJadwal, keluhan },
         { headers }
       );
-      console.log(response);
+
+      setSelectedPoli("");
+      setSelectedJadwal("");
+      setKeluhan("");
     } catch (error) {
       console.log(error);
     }
@@ -105,9 +113,13 @@ function Poli() {
   useEffect(() => {
     const riwayat = async () => {
       try {
-        const response = await axios.get("http://localhost:8000/api/daftar");
+        const token = localStorage.getItem("token");
+        const headers = { Authorization: `Bearer ${token}` };
+        const response = await axios.get(
+          "http://localhost:8000/api/daftar/detail",
+          { headers }
+        );
         setRiwayatDaftar(response.data.message);
-        console.log(response.data.message);
       } catch (error) {
         console.log(error);
       }
@@ -179,7 +191,7 @@ function Poli() {
                     <select
                       className="input-group mb-2 mr-2"
                       value={selectedPoli}
-                      onChange={(e) => setSelectedPoli(e.target.value)}
+                      onChange={changePoli}
                     >
                       <option value="" disabled selected>
                         PILIH POLI
@@ -204,11 +216,11 @@ function Poli() {
                       <option value="" disabled selected>
                         PILIH JADWAL
                       </option>
-                      {filteredJadwal.map((index) => (
-                        <option key={index} value={index.id}>
-                          {index.hari} | {index.jamMulai.slice(0, 5)}-
-                          {index.jamSelesai.slice(0, 5)} |
-                          {index.Dokter.dokterName}
+                      {filteredJadwal.map((jadwal) => (
+                        <option key={jadwal} value={jadwal.id}>
+                          {jadwal.hari} | {jadwal.jamMulai.slice(0, 5)}-
+                          {jadwal.jamSelesai.slice(0, 5)} |{" "}
+                          {jadwal.Dokter.dokterName}
                         </option>
                       ))}
                     </select>
@@ -243,21 +255,29 @@ function Poli() {
                         <th scope="col">Aksi</th>
                       </tr>
                     </thead>
-                    {riwayatDaftar && (
+                    {riwayatDaftar ? (
                       <tbody>
-                        <tr>
-                          <th scope="row">1</th>
-                          <td>Mark</td>
-                          <td>
-                            {/* {riwayatDaftar.JadwalPeriksa.Dokter.dokterName} */}
-                          </td>
-                          <td>@mdo</td>
-                          <td>07.00</td>
-                          <td>08.00</td>
-                          <td>1</td>
-                          <td>tes</td>
-                        </tr>
+                        {riwayatDaftar.map((item, index) => (
+                          <tr key={item.id}>
+                            <td>{index + 1}</td>
+                            <td>{item.JadwalPeriksa?.Dokter?.Poli.namaPoli}</td>
+                            <td>{item.JadwalPeriksa?.Dokter.dokterName}</td>
+                            <td>{item.JadwalPeriksa?.hari}</td>
+                            <td>{item.JadwalPeriksa?.jamMulai.slice(0, 5)}</td>
+                            <td>
+                              {item.JadwalPeriksa?.jamSelesai.slice(0, 5)}
+                            </td>
+                            <td>{item.queue}</td>
+                            <td>
+                              <button className="btn btn-primary">
+                                detail
+                              </button>
+                            </td>
+                          </tr>
+                        ))}
                       </tbody>
+                    ) : (
+                      <div>Tidak ada riwayat periksa</div>
                     )}
                   </table>
                 </div>

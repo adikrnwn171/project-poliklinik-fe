@@ -16,7 +16,7 @@ function Login() {
       timer = setTimeout(() => {
         setError("");
         setShowError(false);
-      }, 3000);
+      }, 5000);
     }
     return () => clearTimeout(timer);
   }, [error]);
@@ -43,7 +43,7 @@ function Login() {
       localStorage.setItem("token", response.data.data.token);
       navigateTo("/");
     } catch (error) {
-      setError("Invalid email or password");
+      setError(error.response.data.message);
     }
   };
   return (
@@ -58,7 +58,7 @@ function Login() {
               </a>
             </div>
             <div className="card-body">
-              <p className="login-box-msg">Sign in to start your session</p>
+              <p className="login-box-msg">Sign in as a patient</p>
               <form onSubmit={handleSubmit}>
                 <div className="input-group mb-3">
                   <input
