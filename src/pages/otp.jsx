@@ -1,13 +1,27 @@
 import axios from "axios";
-import { useState, useRef } from "react";
-import { useLocation } from "react-router-dom";
+import { useState, useRef, useEffect } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 
 function Otp() {
   const location = useLocation();
-  // const { email } = location.state;
-  const { email } = { email: "romeo@gmail.com" };
+  const { email } = location.state;
   const [otp, setOtp] = useState(Array(6).fill(""));
   const inputsRef = useRef([]);
+  const navigate = useNavigate();
+  const [error, setError] = useState();
+  const [showError, setShowError] = useState();
+
+  useEffect(() => {
+    let timer;
+    if (error) {
+      setShowError(true);
+      timer = setTimeout(() => {
+        setError("");
+        setShowError(false);
+      }, 5000);
+    }
+    return () => clearTimeout(timer);
+  }, [error]);
 
   const handleChange = (index, e) => {
     const value = e.target.value;
@@ -26,15 +40,22 @@ function Otp() {
     e.preventDefault();
 
     const otpString = otp.join("");
-
     try {
-      const response = await axios("http://localhost:8000/api/pasien/verify", {
-        email,
-        otp: otpString,
-      });
-      console.log(response);
+      const response = await axios.post(
+        "http://localhost:8000/api/pasien/verify",
+        {
+          email,
+          otp: otpString,
+        }
+      );
+      alert(
+        "Verifikasi OTP sukses, Anda akan diarahkan ke halaman login dalam 3 detik"
+      );
+      setTimeout(() => {
+        navigate("/login");
+      }, 3000);
     } catch (error) {
-      console.log(error);
+      setError(error.response.data.message);
     }
   };
 
@@ -71,6 +92,7 @@ function Otp() {
                   Submit
                 </button>
               </form>
+              {error && <alert>{error}</alert>}
             </div>
             {/* /.form-box */}
           </div>

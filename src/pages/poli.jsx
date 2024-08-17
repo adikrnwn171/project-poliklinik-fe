@@ -255,7 +255,7 @@ function Poli() {
                         <th scope="col">Aksi</th>
                       </tr>
                     </thead>
-                    {riwayatDaftar ? (
+                    {riwayatDaftar.length > 0 ? (
                       <tbody>
                         {riwayatDaftar.map((item, index) => (
                           <tr key={item.id}>
@@ -277,7 +277,13 @@ function Poli() {
                         ))}
                       </tbody>
                     ) : (
-                      <div>Tidak ada riwayat periksa</div>
+                      <tbody>
+                        <tr>
+                          <td colSpan="8" className="text-center">
+                            Tidak ada data riwayat daftar
+                          </td>
+                        </tr>
+                      </tbody>
                     )}
                   </table>
                 </div>
