@@ -7,6 +7,8 @@ import Register from "./pages/register";
 import Otp from "./pages/otp";
 import RegisterDokter from "./pages/dokterRegister";
 import LoginDokter from "./pages/dokterLogin";
+import DokterHome from "./pages/dokterHome";
+import DaftarPeriksa from "./pages/dokterDaftarPeriksa";
 
 function App() {
   return (
@@ -18,8 +20,10 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/otp" element={<Otp />} />
+          <Route path="/dokter/home" element={<DokterHome />} />
           <Route path="/dokter/login" element={<LoginDokter />} />
           <Route path="/dokter/register" element={<RegisterDokter />} />
+          <Route path="/dokter/list-periksa" element={<DaftarPeriksa />} />
         </Routes>
       </BrowserRouter>
     </>

@@ -3,12 +3,12 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 function RegisterDokter() {
-  const [name, setName] = useState();
+  const [dokterName, setName] = useState();
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
   const [address, setAddress] = useState();
-  const [idNumber, setIdNumber] = useState();
   const [phone, setPhone] = useState();
+  const [idPoli, setIdPoli] = useState();
   const [image, setImage] = useState(null);
   const navigate = useNavigate();
 
@@ -17,12 +17,12 @@ function RegisterDokter() {
 
     try {
       const formData = new FormData();
-      formData.append("name", name);
+      formData.append("dokterName", dokterName);
       formData.append("email", email);
       formData.append("password", password);
       formData.append("address", address);
-      formData.append("idNumber", idNumber);
       formData.append("phone", phone);
+      formData.append("idPoli", idPoli);
       formData.append("image", image);
 
       const response = await axios.post(
@@ -30,7 +30,7 @@ function RegisterDokter() {
         formData
       );
 
-      navigate("/otp", { state: { email } });
+      navigate("/dokter/login");
     } catch (error) {
       console.log(error);
     }
@@ -55,7 +55,7 @@ function RegisterDokter() {
                     type="text"
                     className="form-control"
                     placeholder="Full name"
-                    value={name}
+                    value={dokterName}
                     onChange={(e) => {
                       setName(e.target.value);
                     }}
@@ -118,22 +118,6 @@ function RegisterDokter() {
                   <input
                     type="text"
                     className="form-control"
-                    placeholder="ID Number"
-                    value={idNumber}
-                    onChange={(e) => {
-                      setIdNumber(e.target.value);
-                    }}
-                  />
-                  <div className="input-group-append">
-                    <div className="input-group-text">
-                      <span className="fas fa-address-card" />
-                    </div>
-                  </div>
-                </div>
-                <div className="input-group mb-3">
-                  <input
-                    type="text"
-                    className="form-control"
                     placeholder="Phone Number"
                     value={phone}
                     onChange={(e) => {
@@ -143,6 +127,22 @@ function RegisterDokter() {
                   <div className="input-group-append">
                     <div className="input-group-text">
                       <span className="fas fa-phone-square" />
+                    </div>
+                  </div>
+                </div>
+                <div className="input-group mb-3">
+                  <input
+                    type="text"
+                    className="form-control"
+                    placeholder="Poli"
+                    value={idPoli}
+                    onChange={(e) => {
+                      setIdPoli(e.target.value);
+                    }}
+                  />
+                  <div className="input-group-append">
+                    <div className="input-group-text">
+                      <span className="fas fa-address-card" />
                     </div>
                   </div>
                 </div>

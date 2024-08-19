@@ -41,7 +41,7 @@ function LoginDokter() {
         }
       );
       localStorage.setItem("token", response.data.data.token);
-      navigateTo("/");
+      navigateTo("/dokter/home");
     } catch (error) {
       setError(error.response.data.message);
     }
