@@ -9,6 +9,7 @@ import RegisterDokter from "./pages/dokterRegister";
 import LoginDokter from "./pages/dokterLogin";
 import DokterHome from "./pages/dokterHome";
 import DaftarPeriksa from "./pages/dokterDaftarPeriksa";
+import PeriksaPasien from "./pages/dokterPeriksa";
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
           <Route path="/dokter/login" element={<LoginDokter />} />
           <Route path="/dokter/register" element={<RegisterDokter />} />
           <Route path="/dokter/list-periksa" element={<DaftarPeriksa />} />
+          <Route path="/dokter/periksa" element={<PeriksaPasien />} />
         </Routes>
       </BrowserRouter>
     </>

@@ -3,11 +3,17 @@ import { useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import axios from "axios";
 import DokterSidebar from "../components/DokterSidebar";
+import Select from "react-select";
 
-function DaftarPeriksa() {
+function PeriksaPasien() {
   const navigateTo = useNavigate();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [listPeriksa, setListPeriksa] = useState([]);
+
+  const options = [
+    { value: "bodrex", label: "bodrex" },
+    { value: "intunal", label: "intunal" },
+  ];
 
   useEffect(() => {
     // Cek apakah pengguna sudah login atau memiliki token di lokal
@@ -59,7 +65,7 @@ function DaftarPeriksa() {
               <div className="container-fluid">
                 <div className="row mb-2">
                   <div className="col-sm-6">
-                    <h1 className="m-0">Daftar Periksa Pasien</h1>
+                    <h1 className="m-0">Periksa Pasien</h1>
                   </div>
                   {/* /.col */}
                   <div className="col-sm-6">
@@ -68,6 +74,7 @@ function DaftarPeriksa() {
                         <a href="#">Home</a>
                       </li>
                       <li className="breadcrumb-item active">Daftar Periksa</li>
+                      <li className="breadcrumb-item active">Periksa Pasien</li>
                     </ol>
                   </div>
                   {/* /.col */}
@@ -79,37 +86,49 @@ function DaftarPeriksa() {
             {/* /.content-header */}
             {/* Main content */}
             <div className="container mr-0">
-              <div className="row pl-3 col-12">
-                <div className="card col-12">
-                  <div className="card-body table-responsive p-0">
-                    <table className="table table-hover text-nowrap">
-                      <thead>
-                        <tr>
-                          <th className="col-2">No Urut</th>
-                          <th className="col-4">Nama Pasien</th>
-                          <th className="col-4">Keluhan</th>
-                          <th className="col-2">Aksi</th>
-                        </tr>
-                      </thead>
-                      {listPeriksa.length > 0 ? (
-                        <tbody>
-                          {listPeriksa.map((item, index) => (
-                            <tr>
-                              <td>{index + 1}</td>
-                              <td>{item.Pasien.name}</td>
-                              <td>{item.keluhan}</td>
-                              <td>
-                                <button className="btn btn-primary">
-                                  Periksa
-                                </button>
-                              </td>
-                            </tr>
-                          ))}
-                        </tbody>
-                      ) : (
-                        <div>Tidak ada daftar periksa</div>
-                      )}
-                    </table>
+              <div className="card card-default col-12 pt-0">
+                <div className="card-header">
+                  <h2 className="card-title">Periksa Pasien</h2>
+                </div>
+                <div className="card-body">
+                  <div className="row">
+                    <div className="form-group col-12">
+                      <label>Nama Pasien</label>
+                      <br />
+                      <input
+                        type="text"
+                        className="col-12"
+                        disabled
+                        value="Joe"
+                      />
+                    </div>
+                    <div className="form-group col-12">
+                      <label>Tanggal Periksa</label>
+                      <div className="input-group">
+                        <input
+                          type="date"
+                          className="form-control"
+                          data-inputmask-alias="datetime"
+                          data-inputmask-inputformat="dd/mm/yyyy"
+                          data-mask
+                        />
+                      </div>
+                    </div>
+                    <div className="form-group col-12">
+                      <label>Catatan</label>
+                      <br />
+                      <textarea type="text" className="col-12" />
+                    </div>
+                    <div className="form-group col-12">
+                      <label>Obat</label>
+                      <Select
+                        styles={{ width: "100%" }}
+                        className="input-group col-12"
+                        multiple="multiple"
+                        data-placeholder="Select a State"
+                        options={options}
+                      ></Select>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -123,4 +142,4 @@ function DaftarPeriksa() {
   );
 }
 
-export default DaftarPeriksa;
+export default PeriksaPasien;

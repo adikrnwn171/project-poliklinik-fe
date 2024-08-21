@@ -102,7 +102,7 @@ function DokterSidebar() {
                 </a>
               </li>
               <li className="nav-item">
-                <a href="#" className="nav-link">
+                <a href="/dokter/list-periksa" className="nav-link">
                   <i className="nav-icon far fa-hospital" />
                   <p>Periksa Pasien</p>
                   <span class="right badge badge-primary">Dokter</span>
